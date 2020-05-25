@@ -1,7 +1,7 @@
 import sqlite3
 
 
-def query_builder(args, parameters, query):
+def query_builder(args, parameters, query, table_name):
     def builder(arg_name, arg_val, parameters, query):
         # seperate the argument operator (=, !=, >, <) from the value.
         if len(arg_val.split(":")) == 1:
@@ -16,8 +16,8 @@ def query_builder(args, parameters, query):
                 operator = "LIKE"
             elif arg_operator.lower() in ['!', 'not', 'noteq', '!=']:
                 operator = "NOT LIKE"
-            else:
-                operator = "LIKE"
+        else:
+            operator = "LIKE"
 
         if type(arg_val) == str:
             if len(arg_val.split(",")) == 1:
@@ -49,7 +49,7 @@ def query_builder(args, parameters, query):
         #             bool_val = "0"
         #         parameters, query = builder("table", bool_val, parameters, query)
         for each in val:
-            parameters, query = builder("table", each, parameters, query)
+            parameters, query = builder(f"{table_name}.{key}", each, parameters, query)
     query = query[:-4] + ";"
     return parameters, query
 

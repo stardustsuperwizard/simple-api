@@ -34,7 +34,7 @@ def get_api_records():
         query = '''SELECT * FROM nba_elo'''
     else:
         query = "SELECT * FROM nba_elo WHERE"
-        parameters, query = query_builder(request.args, parameters, query)
+        parameters, query = query_builder(request.args, parameters, query, 'nba_elo')
 
     results = c.execute(query, tuple(parameters)).fetchall()
     if results:
