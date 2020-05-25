@@ -4,7 +4,7 @@ import sqlite3
 def query_builder(args, parameters, query):
     def builder(arg_name, arg_val, parameters, query):
         # seperate the argument operator (=, !=, >, <) from the value.
-        if len(arg.val.split(":")) == 1:
+        if len(arg_val.split(":")) == 1:
             arg_operator = None
         else:
             arg_operator = arg_val.split(":")[0]
