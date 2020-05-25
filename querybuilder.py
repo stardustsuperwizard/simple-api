@@ -1,7 +1,5 @@
 import sqlite3
 
-app = Flask(__name__)
-
 
 def query_builder(args, parameters, query):
     def builder(arg_name, arg_val, parameters, query):
