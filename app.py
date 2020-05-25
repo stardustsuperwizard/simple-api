@@ -2,6 +2,7 @@ import json
 import sqlite3
 
 from flask import Flask, jsonify, request
+from querybuilder import query_builder
 
 app = Flask(__name__)
 
@@ -25,7 +26,10 @@ def get_api_records():
     results = None
     parameters = []
     if not request.args:
-        query = '''SELECT * from nba_elo'''
+        query = '''SELECT * FROM nba_elo'''
+    else:
+        query = "SELECT * FROM nba_elo WHERE"
+        parameters, query = query_builder(request.args, parameters, query)
 
     results = c.execute(query, tuple(parameters)).fetchall()
     if results:
