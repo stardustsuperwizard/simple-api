@@ -1,11 +1,40 @@
-from flask import Flask, escape, request
+import json
+import sqlite3
+
+from flask import Flask, jsonify, request
 
 app = Flask(__name__)
 
-@app.route("/")
-@app.route("/index")
-def index():
-    return "Hello world!"
+DB = "instance/data.sqlite"
 
-if __name__ == "__main__":
-    app.run(host="127.0.0.1", port=5000, debug=True)
+@app.route('/')
+@app.route('/index')
+def index():
+    return 'Hello world!'
+
+@app.route('/api/records')
+@app.route('/api/records/')
+def get_api_records():
+    data = []
+    message = "All records available"
+    status = "normal"
+    conn = sqlite3.connect(DB)
+    conn.row_factory = sqlite3.Row
+    c = conn.cursor()
+
+    results = None
+    parameters = []
+    if not request.args:
+        query = '''SELECT * from nba_elo'''
+
+    results = c.execute(query, tuple(parameters)).fetchall()
+    if results:
+        data = [dict(i) for i in results]
+        status = "success"
+        code = 200
+    
+    return jsonify({ 'code': code, 'message': message, 'status': status, 'data': data }), code
+
+
+if __name__ == '__main__':
+    app.run(host='127.0.0.1', port=5000, debug=True)
