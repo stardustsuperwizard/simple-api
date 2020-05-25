@@ -38,7 +38,7 @@ def query_builder(args, parameters, query):
             parameters.append(arg_val)
         return parameters, query
 
-    args = arg.tho_dict(flat=False)
+    args = args.to_dict(flat=False)
     for key,val in args.items():
         # if key == "boolen_value": #replace boolen value with correct value.
         #     for each in val:
