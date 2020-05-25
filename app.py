@@ -16,11 +16,19 @@ def _corsify_response(response):
 @app.route('/')
 @app.route('/index')
 def index():
-    return 'Hello world!'
+    return "Please use \"/api/records/\" and then a table name (such as \"nba_elo\") to get started."
+
 
 @app.route('/api/records')
 @app.route('/api/records/')
 def get_api_records():
+    message = "Please enter a table name in the address bar."
+    return jsonify({ 'code': 200, 'message': message, 'status': 'success', 'data': [] }), 200
+
+
+@app.route('/api/records/<string:table_name>')
+@app.route('/api/records/<string:table_name>/') # Firefox adds a "/" at the end of URL
+def get_api_records_table(table_name):
     data = []
     message = "All records available"
     status = "normal"
@@ -31,16 +39,25 @@ def get_api_records():
     results = None
     parameters = []
     if not request.args:
-        query = '''SELECT * FROM nba_elo'''
+        query = f'''SELECT * FROM {table_name}'''
     else:
-        query = "SELECT * FROM nba_elo WHERE"
-        parameters, query = query_builder(request.args, parameters, query, 'nba_elo')
+        query = f"SELECT * FROM {table_name} WHERE"
+        parameters, query = query_builder(request.args, parameters, query, table_name)
 
-    results = c.execute(query, tuple(parameters)).fetchall()
-    if results:
-        data = [dict(i) for i in results]
-        status = "success"
-        code = 200
+    try:
+        results = c.execute(query, tuple(parameters)).fetchall()
+        if results:
+            data = [dict(i) for i in results]
+            status = "success"
+            code = 200
+        else:
+            message = f"Your query did not return any results."
+            status = "not found"
+            code = 404
+    except sqlite3.OperationalError as err:
+        message = str(err)
+        status = "error"
+        code = 400
     
     return jsonify({ 'code': code, 'message': message, 'status': status, 'data': data }), code
 
