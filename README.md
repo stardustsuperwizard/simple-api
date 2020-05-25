@@ -1,7 +1,7 @@
 # simple-api
  built with Python Flask
 
-This is a simple API that is use for local testing using SQLite.
+This is a simple Flask API (using SQLite) that is useful for local developlment.
 
 Data set used when building was found here:
 https://github.com/fivethirtyeight/data/tree/master/nba-forecasts
