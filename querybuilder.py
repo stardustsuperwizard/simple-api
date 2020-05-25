@@ -1,19 +1,7 @@
-import json
 import sqlite3
-
-from flask import Flask, flash, g, jsonify, redirect, render_template, request, session, url_for
-
-
-# from decorators import authenticate
 
 app = Flask(__name__)
 
-DB = "instance/data.sqlite"
-
-
-#CORS Response
-def _corsify_response(response):
-    response.headers.add("Access-Controls-Allow-Origin": "*")
 
 def query_builder(args, parameters, query):
     def builder(arg_name, arg_val, parameters, query):

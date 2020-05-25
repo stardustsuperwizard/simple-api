@@ -8,6 +8,11 @@ app = Flask(__name__)
 
 DB = "instance/data.sqlite"
 
+
+#CORS Response
+def _corsify_response(response):
+    response.headers.add("Access-Controls-Allow-Origin","*")
+
 @app.route('/')
 @app.route('/index')
 def index():
