@@ -11,7 +11,10 @@ DB = "instance/data.sqlite"
 
 #CORS Response
 def _corsify_response(response):
-    response.headers.add("Access-Controls-Allow-Origin","*")
+    print(response.headers)
+    response.headers.add("Access-Control-Allow-Origin", "*")
+    print(response.headers)
+    return response
 
 @app.route('/')
 @app.route('/index')
@@ -23,7 +26,7 @@ def index():
 @app.route('/api/records/')
 def get_api_records():
     message = "Please enter a table name in the address bar."
-    return jsonify({ 'code': 200, 'message': message, 'status': 'success', 'data': [] }), 200
+    return _corsify_response(jsonify({ 'code': 200, 'message': message, 'status': 'success', 'data': [] })), 200
 
 
 @app.route('/api/records/<string:table_name>')
@@ -59,7 +62,9 @@ def get_api_records_table(table_name):
         status = "error"
         code = 400
     
-    return jsonify({ 'code': code, 'message': message, 'status': status, 'data': data }), code
+    response = _corsify_response(jsonify({ 'code': code, 'message': message, 'status': status, 'data': data }))
+    print(response.headers)
+    return response
 
 
 if __name__ == '__main__':
